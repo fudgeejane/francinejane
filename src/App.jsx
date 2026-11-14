@@ -81,6 +81,7 @@ const projects = [
       'Developed Applora, a web application designed to provide users with an intuitive, seamless digital experience. Built responsive interfaces, implemented secure authentication and authorization, integrated backend APIs, and managed database operations. Focused on usability, performance, and reliable full-stack features.',
     tags: ['MongoDB', 'Express.js', 'React', 'Node.js', 'JWT'],
     image: apploraImage,
+    demoUrl: 'https://applora-seven.vercel.app/',
   },
   {
     number: '02',
@@ -89,6 +90,7 @@ const projects = [
       'Built an online review platform for Tomas Claudio Colleges, giving students a centralized space to prepare for board exams. Created responsive interfaces, refined navigation and usability, tested workflows, and collaborated with students, professors, and developers to shape features around user needs.',
     tags: ['React.js', 'Firebase', 'Responsive UI/UX'],
     image: reviewHubImage,
+    demoUrl: 'https://crim-edge.vercel.app/',
   },
   {
     number: '03',
@@ -105,6 +107,7 @@ const projects = [
       'Created a student evaluation system that automates submissions and evaluation workflows. Built frontend components and backend functions, and used Firebase real-time synchronization to keep records current for students, evaluators, and administrators.',
     tags: ['React', 'Vite', 'Node.js', 'Firebase'],
     image: peerHiveImage,
+    demoUrl: 'https://tcc-evaluation.web.app/',
   },
 ]
 
@@ -471,6 +474,7 @@ function App() {
   const [activeSection, setActiveSection] = useState('about')
 
   useEffect(() => {
+    const pageUrl = `https://francinejane-jet.vercel.app${isProjectsPage ? '/projects' : '/'}`
     const title = isProjectsPage
       ? 'Projects | Francine Jane M. Sto Domingo'
       : 'Francine Jane M. Sto Domingo | Full-Stack Web Developer'
@@ -478,8 +482,10 @@ function App() {
       ? 'Explore web and desktop applications built by Francine Jane M. Sto Domingo for learning, academic operations, and student evaluation.'
       : 'Francine Jane M. Sto Domingo is a full-stack web developer building responsive web applications with React, Node.js, and Firebase.'
 
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', pageUrl)
     document.querySelector('meta[name="description"]')?.setAttribute('content', description)
     document.querySelector('meta[property="og:title"]')?.setAttribute('content', title)
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', pageUrl)
     document.querySelector('meta[property="og:description"]')?.setAttribute('content', description)
     document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title)
     document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description)
