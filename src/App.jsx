@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
-import apploraImage from './assets/Applora.png'
-import reviewHubImage from './assets/ReviewHub.png'
-import facultyManagementImage from './assets/FacultyManagemenSystem.png'
-import peerHiveImage from './assets/PeerHiv.png'
+import apploraImage from './assets/applora-project.webp'
+import reviewHubImage from './assets/reviewhub-project.webp'
+import facultyManagementImage from './assets/faculty-management-project.webp'
+import peerHiveImage from './assets/peerhive-project.webp'
 
 const profile = {
   name: 'Francine Jane',
   title: 'Full-Stack Web Developer',
   intro:
-    'I build responsive web applications, connecting polished interfaces with dependable backend services.',
-  email: 'francinejane.sd@gmai.com',
+    'I’m Francine Jane, a web developer building responsive React applications and practical full-stack products for education and business.',
+  email: 'francinejane.sd@gmail.com',
   github: 'https://github.com/fudgeejane',
   linkedin: 'https://www.linkedin.com/in/francine-jane-sto-domingo-680476319/',
 }
@@ -77,36 +77,48 @@ const projects = [
   {
     number: '01',
     name: 'Applora',
-    description:
-      'Developed Applora, a web application designed to provide users with an intuitive, seamless digital experience. Built responsive interfaces, implemented secure authentication and authorization, integrated backend APIs, and managed database operations. Focused on usability, performance, and reliable full-stack features.',
+    problem:
+      'The project called for an integrated web experience with responsive UI, secure access, and connected data operations.',
+    result:
+      'Implemented responsive interfaces, JWT authentication, API integration, and database operations.',
     tags: ['MongoDB', 'Express.js', 'React', 'Node.js', 'JWT'],
     image: apploraImage,
+    imageAlt: 'Screenshot of Applora, a full-stack web application with secure authentication.',
     demoUrl: 'https://applora-seven.vercel.app/',
   },
   {
     number: '02',
     name: 'ReviewHub',
-    description:
-      'Built an online review platform for Tomas Claudio Colleges, giving students a centralized space to prepare for board exams. Created responsive interfaces, refined navigation and usability, tested workflows, and collaborated with students, professors, and developers to shape features around user needs.',
+    problem:
+      'Students needed a centralized online space to prepare for board exams.',
+    result:
+      'Built responsive review workflows and refined the platform with feedback from students, professors, and developers.',
     tags: ['React.js', 'Firebase', 'Responsive UI/UX'],
     image: reviewHubImage,
+    imageAlt: 'Screenshot of ReviewHub, a board-exam review platform.',
     demoUrl: 'https://crim-edge.vercel.app/',
   },
   {
     number: '03',
     name: 'Faculty Management System',
-    description:
-      'Developed a desktop application for faculty scheduling, curriculum, and student payables. Added tools to create and print curricula, assign students, track grades and records, manage balances and payments, and generate receipts.',
+    problem:
+      'Faculty operations needed a desktop workflow for scheduling, curricula, student records, and payables.',
+    result:
+      'Delivered tools for curriculum creation and printing, student assignment, grade tracking, payments, and receipts.',
     tags: ['React.js', 'Electron', 'Firebase'],
     image: facultyManagementImage,
+    imageAlt: 'Screenshot of a faculty management app for schedules, curricula, and payables.',
   },
   {
     number: '04',
     name: 'PeerHive',
-    description:
-      'Created a student evaluation system that automates submissions and evaluation workflows. Built frontend components and backend functions, and used Firebase real-time synchronization to keep records current for students, evaluators, and administrators.',
+    problem:
+      'Student evaluation required streamlined submission and evaluation workflows.',
+    result:
+      'Automated evaluation workflows with Firebase real-time synchronization to keep records current.',
     tags: ['React', 'Vite', 'Node.js', 'Firebase'],
     image: peerHiveImage,
+    imageAlt: 'Screenshot of PeerHive, a real-time student evaluation system.',
     demoUrl: 'https://tcc-evaluation.web.app/',
   },
 ]
@@ -155,7 +167,7 @@ function Icon({ name, size = 18 }) {
 
 function SocialLinks() {
   return (
-    <div className="social-links" aria-label="Social links">
+    <nav className="social-links" aria-label="Social profiles">
       <a href={profile.github} aria-label="GitHub" target="_blank" rel="noreferrer">
         <Icon name="github" />
       </a>
@@ -165,7 +177,7 @@ function SocialLinks() {
       <a href={`mailto:${profile.email}`} aria-label="Email">
         <Icon name="mail" />
       </a>
-    </div>
+    </nav>
   )
 }
 
@@ -304,7 +316,9 @@ function ProjectVisual({ project }) {
       <img
         className="project-image"
         src={project.image}
-        alt={`${project.name} application screenshot`}
+        alt={project.imageAlt}
+        width="1200"
+        height="675"
         loading="lazy"
       />
     </div>
@@ -318,20 +332,22 @@ function ProjectCard({ project, featured = true }) {
       <div className="project-card-body">
         <div className="project-meta"><span>{featured ? 'FEATURED PROJECT' : 'PROJECT'}</span><span>{project.number}</span></div>
         <h3>{project.name}</h3>
-        <p>{project.description}</p>
-        <div className="tag-list">
+        <p><strong>Problem:</strong> {project.problem}</p>
+        <p><strong>Result:</strong> {project.result}</p>
+        <p className="project-stack"><strong>Tech stack:</strong> {project.tags.join(', ')}</p>
+        <div className="tag-list" aria-label={`${project.name} technologies`}>
           {project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}
         </div>
         {(project.repositoryUrl || project.demoUrl) && (
           <div className="project-links">
             {project.repositoryUrl && (
               <a href={project.repositoryUrl} target="_blank" rel="noreferrer">
-                Repository <Icon name="arrow" size={15} />
+                {project.name} source code <Icon name="arrow" size={15} />
               </a>
             )}
             {project.demoUrl && (
               <a href={project.demoUrl} target="_blank" rel="noreferrer">
-                Live preview <Icon name="arrow" size={15} />
+                {project.name} live demo <Icon name="arrow" size={15} />
               </a>
             )}
           </div>
@@ -469,8 +485,8 @@ function CursorSpotlight() {
   return <div ref={spotlightRef} className="cursor-spotlight" aria-hidden="true" />
 }
 
-function App() {
-  const isProjectsPage = window.location.pathname.replace(/\/+$/, '') === '/projects'
+function App({ pathname = typeof window === 'undefined' ? '/' : window.location.pathname }) {
+  const isProjectsPage = pathname.replace(/\/+$/, '') === '/projects'
   const [activeSection, setActiveSection] = useState('about')
 
   useEffect(() => {

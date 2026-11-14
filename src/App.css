@@ -570,6 +570,15 @@
   line-height: 1.7;
 }
 
+.project-card-body > p strong {
+  color: var(--text-secondary);
+  font-weight: 550;
+}
+
+.project-card-body > .project-stack {
+  margin-top: 10px;
+}
+
 .project-card-body .tag-list {
   margin-top: 12px;
 }
