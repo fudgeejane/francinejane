@@ -42,7 +42,7 @@ const experiences = [
     role: 'Freelance & Commission Software Developer',
     organization: 'Independent',
     description:
-      'Develop custom software for business operations and academic research. Work directly with clients to understand their needs, build and refine features, resolve issues, and maintain systems as requirements evolve.',
+      'Help students develop systems for their research projects and review their research. Work with them to understand project requirements, build and refine system features, and provide support as their projects progress.',
     tags: ['Client collaboration', 'Software development', 'Maintenance'],
   },
   {
