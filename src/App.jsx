@@ -77,34 +77,34 @@ const projects = [
   {
     number: '01',
     name: 'Applora',
-    problem:
-      'The project called for an integrated web experience with responsive UI, secure access, and connected data operations.',
-    result:
-      'Implemented responsive interfaces, JWT authentication, API integration, and database operations.',
+    system:
+      'A centralized job application tracking system that helps users organize and monitor applications in one place. It features an ATS resume analyzer and an AI-powered assistant chatbot.',
+    solutions:
+      'Evaluates resume compatibility and guides users throughout the job application process.',
     tags: ['MongoDB', 'Express.js', 'React', 'Node.js', 'JWT'],
     image: apploraImage,
-    imageAlt: 'Screenshot of Applora, a full-stack web application with secure authentication.',
+    imageAlt: 'Screenshot of Applora, an application-tracking system with AI resume analysis.',
     demoUrl: 'https://applora-seven.vercel.app/',
   },
   {
     number: '02',
     name: 'ReviewHub',
-    problem:
-      'Students needed a centralized online space to prepare for board exams.',
-    result:
-      'Built responsive review workflows and refined the platform with feedback from students, professors, and developers.',
+    system:
+      'An online review platform that gives students centralized access to review materials and resources for board examinations.',
+    solutions:
+      'Provides an organized learning environment, makes study materials more accessible, and simplifies exam preparation.',
     tags: ['React.js', 'Firebase', 'Responsive UI/UX'],
     image: reviewHubImage,
-    imageAlt: 'Screenshot of ReviewHub, a board-exam review platform.',
+    imageAlt: 'Screenshot of ReviewHub, an online board-exam review platform.',
     demoUrl: 'https://crim-edge.vercel.app/',
   },
   {
     number: '03',
     name: 'Faculty Management System',
-    problem:
-      'Faculty operations needed a desktop workflow for scheduling, curricula, student records, and payables.',
-    result:
-      'Delivered tools for curriculum creation and printing, student assignment, grade tracking, payments, and receipts.',
+    system:
+      'A desktop application for managing schedules, curricula, student records, grades, and payables in one system.',
+    solutions:
+      'Reduces manual administrative tasks, improves data organization, and makes academic processes more efficient.',
     tags: ['React.js', 'Electron', 'Firebase'],
     image: facultyManagementImage,
     imageAlt: 'Screenshot of a faculty management app for schedules, curricula, and payables.',
@@ -112,13 +112,13 @@ const projects = [
   {
     number: '04',
     name: 'PeerHive',
-    problem:
-      'Student evaluation required streamlined submission and evaluation workflows.',
-    result:
-      'Automated evaluation workflows with Firebase real-time synchronization to keep records current.',
+    system:
+      'A centralized student evaluation system connecting students, evaluators, and administrators.',
+    solutions:
+      'Automates evaluation submissions, enables real-time data updates, and reduces manual coordination and record management.',
     tags: ['React', 'Vite', 'Node.js', 'Firebase'],
     image: peerHiveImage,
-    imageAlt: 'Screenshot of PeerHive, a real-time student evaluation system.',
+    imageAlt: 'Screenshot of PeerHive, a platform for peer evaluations.',
     demoUrl: 'https://tcc-evaluation.web.app/',
   },
 ]
@@ -245,7 +245,8 @@ function AboutSection() {
         </p>
         <p>
           I enjoy designing and implementing intuitive interfaces, creating seamless user experiences,
-          and building functional solutions that bring ideas to life.
+          and building functional solutions that bring ideas to life. I'm always open to learning new
+          technologies and expanding my skills as a developer.
         </p>
         <p>
           Throughout my academic journey, I've received several recognitions, including
@@ -332,9 +333,10 @@ function ProjectCard({ project, featured = true }) {
       <div className="project-card-body">
         <div className="project-meta"><span>{featured ? 'FEATURED PROJECT' : 'PROJECT'}</span><span>{project.number}</span></div>
         <h3>{project.name}</h3>
-        <p><strong>Problem:</strong> {project.problem}</p>
-        <p><strong>Result:</strong> {project.result}</p>
-        <p className="project-stack"><strong>Tech stack:</strong> {project.tags.join(', ')}</p>
+        <p>
+          {project.system}{' '}
+          {project.solutions}
+        </p>
         <div className="tag-list" aria-label={`${project.name} technologies`}>
           {project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}
         </div>
@@ -362,7 +364,7 @@ function ProjectsSection() {
     <section className="content-section" id="projects">
       <SectionHeading number="03">Selected projects</SectionHeading>
       <p className="section-lead">
-        Applications built to support exam preparation, faculty operations, and student evaluation.
+        Showcasing the projects I've worked on and the solutions I've built.
       </p>
       <div className="projects-list">
         {projects.slice(0, 3).map((project) => <ProjectCard project={project} key={project.number} />)}
@@ -377,7 +379,7 @@ function ProjectsSection() {
 function BlogsSection() {
   return (
     <section className="content-section blogs-section" id="blogs">
-      <SectionHeading number="05">My Blogs</SectionHeading>
+      <SectionHeading number="05">Blogs</SectionHeading>
       <p className="section-lead">
         A space for the things I learn, the ideas I’m exploring, and the occasional useful discovery.
       </p>
