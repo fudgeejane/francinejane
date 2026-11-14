@@ -1,9 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
+import {
+  LuArrowLeft,
+  LuArrowRight,
+  LuArrowUpRight,
+  LuGamepad2,
+  LuGithub,
+  LuHeart,
+  LuLinkedin,
+  LuMail,
+  LuRotateCcw,
+  LuSparkles,
+  LuX,
+} from 'react-icons/lu'
 import './App.css'
-import apploraImage from './assets/applora-project.webp'
-import reviewHubImage from './assets/reviewhub-project.webp'
-import facultyManagementImage from './assets/faculty-management-project.webp'
-import peerHiveImage from './assets/peerhive-project.webp'
+import apploraImage from './assets/Applora.png'
+import reviewHubImage from './assets/ReviewHub.png'
+import facultyManagementImage from './assets/FacultyManagemenSystem.png'
+import peerHiveImage from './assets/PeerHiv.png'
 
 const profile = {
   name: 'Francine Jane',
@@ -43,6 +56,26 @@ const experiences = [
 ]
 
 const articles = []
+
+const hangmanWords = [
+  'DATABASE',
+  'FRAMEWORK',
+  'BACKEND',
+  'FRONTEND',
+  'ALGORITHM',
+  'DEBUGGING',
+  'DEPLOYMENT',
+  'ENCRYPTION',
+  'MIDDLEWARE',
+  'REPOSITORY',
+];
+
+const keyboardRows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM']
+
+function chooseHangmanWord(previousWord) {
+  const choices = hangmanWords.filter((candidate) => candidate !== previousWord)
+  return choices[Math.floor(Math.random() * choices.length)]
+}
 
 const toolGroups = [
   {
@@ -123,65 +156,26 @@ const projects = [
   },
 ]
 
-function Icon({ name, size = 18 }) {
-  const paths = {
-    github: (
-      <>
-        <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 6v-3.9a3.4 3.4 0 0 0-.9-2.7c3-.3 6.1-1.5 6.1-6.7a5.2 5.2 0 0 0-1.4-3.6 4.8 4.8 0 0 0-.1-3.6s-1.2-.4-3.8 1.4a13.2 13.2 0 0 0-6.9 0C5.4 1.1 4.2 1.5 4.2 1.5a4.8 4.8 0 0 0-.1 3.6 5.2 5.2 0 0 0-1.4 3.6c0 5.2 3.1 6.4 6.1 6.7a3.4 3.4 0 0 0-.9 2.7V22" />
-      </>
-    ),
-    linkedin: (
-      <>
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z" />
-        <rect x="2" y="9" width="4" height="12" />
-        <circle cx="4" cy="4" r="2" />
-      </>
-    ),
-    mail: (
-      <>
-        <rect x="2" y="4" width="20" height="16" rx="2" />
-        <path d="m22 7-10 6L2 7" />
-      </>
-    ),
-    arrow: <path d="M7 17 17 7M7 7h10v10" />,
-    right: <path d="M5 12h14m-7-7 7 7-7 7" />,
-    back: <path d="m12 19-7-7 7-7m7 7H5" />,
-  }
-
-  return (
-    <svg
-      aria-hidden="true"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {paths[name]}
-    </svg>
-  )
-}
-
-function SocialLinks() {
+function SocialLinks({ onGameClick }) {
   return (
     <nav className="social-links" aria-label="Social profiles">
       <a href={profile.github} aria-label="GitHub" target="_blank" rel="noreferrer">
-        <Icon name="github" />
+        <LuGithub aria-hidden="true" size={18} />
       </a>
       <a href={profile.linkedin} aria-label="LinkedIn" target="_blank" rel="noreferrer">
-        <Icon name="linkedin" />
+        <LuLinkedin aria-hidden="true" size={18} />
       </a>
       <a href={`mailto:${profile.email}`} aria-label="Email">
-        <Icon name="mail" />
+        <LuMail aria-hidden="true" size={18} />
       </a>
+      <button className="game-launch" type="button" aria-label="Open technology word game" onClick={onGameClick}>
+        <LuGamepad2 aria-hidden="true" size={17} />
+      </button>
     </nav>
   )
 }
 
-function Sidebar({ activeSection, isProjectsPage }) {
+function Sidebar({ activeSection, isProjectsPage, onGameClick }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-inner">
@@ -214,10 +208,129 @@ function Sidebar({ activeSection, isProjectsPage }) {
         </nav>
 
         <div className="sidebar-bottom">
-          <SocialLinks />
+          <SocialLinks onGameClick={onGameClick} />
         </div>
       </div>
     </aside>
+  )
+}
+
+function HangmanGame({ onClose, previousWord, onWordChange }) {
+  const [word, setWord] = useState(() => chooseHangmanWord(previousWord))
+  const [guessedLetters, setGuessedLetters] = useState([])
+  const lives = 5 - guessedLetters.filter((letter) => !word.includes(letter)).length
+  const won = [...word].every((letter) => guessedLetters.includes(letter))
+  const gameOver = lives === 0
+  const finished = won || gameOver
+
+  useEffect(() => {
+    onWordChange(word)
+  }, [word, onWordChange])
+
+  function guessLetter(letter) {
+    if (finished || guessedLetters.includes(letter)) return
+    setGuessedLetters((current) => [...current, letter])
+  }
+
+  function playAgain() {
+    setWord(chooseHangmanWord(word))
+    setGuessedLetters([])
+  }
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        onClose()
+      } else if (/^[a-z]$/i.test(event.key)) {
+        guessLetter(event.key.toUpperCase())
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  })
+
+  return (
+    <div className="game-backdrop" onMouseDown={(event) => {
+      if (event.target === event.currentTarget) onClose()
+    }}>
+      <section
+        className="game-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="game-title"
+        aria-describedby="game-description"
+      >
+        <header className="game-header">
+          <div>
+            <p className="game-eyebrow">A little brain break</p>
+            <h2 id="game-title">Tech word game</h2>
+          </div>
+          <button className="game-close" type="button" onClick={onClose} aria-label="Close game">
+            <LuX aria-hidden="true" size={18} />
+          </button>
+        </header>
+
+        <p className="game-description" id="game-description">
+          Guess the word, one letter at a time. You have five lives.
+        </p>
+
+        <div className="game-lives" aria-label={`${lives} of 5 lives remaining`}>
+          <span className="game-lives-label">LIVES</span>
+          <div className="game-hearts" key={5 - lives} aria-hidden="true">
+            {Array.from({ length: 5 }, (_, index) => (
+              <span className={index < lives ? 'heart-active' : 'heart-inactive'} key={index}>
+                <LuHeart aria-hidden="true" size={16} fill="currentColor" />
+              </span>
+            ))}
+          </div>
+          <span className="game-lives-count">{lives} / 5</span>
+        </div>
+
+        <div className={`game-word ${won ? 'word-complete' : ''}`} aria-label="Hidden word">
+          {[...word].map((letter, index) => (
+            <span className={`game-letter ${guessedLetters.includes(letter) ? 'letter-revealed' : ''}`} key={`${index}-${letter}`}>
+              {guessedLetters.includes(letter) || gameOver ? letter : ''}
+            </span>
+          ))}
+        </div>
+
+        {finished ? (
+          <div className={`game-result ${won ? 'result-win' : 'result-loss'}`} role="status">
+            <p>{won ? 'Brilliant! You got it!' : 'Game over — the word was:'} {!won && <strong>{word}</strong>}</p>
+            <button className="game-again" type="button" onClick={playAgain}>
+              Play again <LuRotateCcw aria-hidden="true" size={14} />
+            </button>
+          </div>
+        ) : (
+          <>
+            <p className="game-keyboard-label">Choose a letter</p>
+            <div className="game-keyboard" aria-label="Letter keyboard">
+              {keyboardRows.map((row) => (
+                <div className="game-keyboard-row" key={row}>
+                  {[...row].map((letter) => {
+                    const guessed = guessedLetters.includes(letter)
+                    const correct = guessed && word.includes(letter)
+                    return (
+                      <button
+                        className={`game-key ${guessed ? (correct ? 'key-correct' : 'key-incorrect') : ''}`}
+                        type="button"
+                        key={letter}
+                        disabled={guessed || finished}
+                        onClick={() => guessLetter(letter)}
+                        aria-label={`${letter}${guessed ? (correct ? ', correct' : ', incorrect') : ''}`}
+                      >
+                        {letter}
+                      </button>
+                    )
+                  })}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </section>
+    </div>
   )
 }
 
@@ -344,12 +457,12 @@ function ProjectCard({ project, featured = true }) {
           <div className="project-links">
             {project.repositoryUrl && (
               <a href={project.repositoryUrl} target="_blank" rel="noreferrer">
-                {project.name} source code <Icon name="arrow" size={15} />
+                {project.name} source code <LuArrowUpRight aria-hidden="true" size={15} />
               </a>
             )}
             {project.demoUrl && (
               <a href={project.demoUrl} target="_blank" rel="noreferrer">
-                {project.name} live demo <Icon name="arrow" size={15} />
+                {project.name} live demo <LuArrowUpRight aria-hidden="true" size={15} />
               </a>
             )}
           </div>
@@ -370,7 +483,7 @@ function ProjectsSection() {
         {projects.slice(0, 3).map((project) => <ProjectCard project={project} key={project.number} />)}
       </div>
       <a className="text-link view-all-link" href="/projects">
-        View all projects <Icon name="right" size={17} />
+        View all projects <LuArrowRight aria-hidden="true" size={17} />
       </a>
     </section>
   )
@@ -395,13 +508,13 @@ function BlogsSection() {
                   {article.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}
                 </div>
               </div>
-              <a className="text-link" href={article.url}>Read article <Icon name="arrow" size={15} /></a>
+              <a className="text-link" href={article.url}>Read article <LuArrowUpRight aria-hidden="true" size={15} /></a>
             </article>
           ))}
         </div>
       ) : (
         <div className="empty-articles">
-          <span className="empty-mark" aria-hidden="true">✳</span>
+          <span className="empty-mark" aria-hidden="true"><LuSparkles size={19} /></span>
           <div>
             <h3>Stories are taking shape.</h3>
             <p>There are no published articles just yet. Check back soon for notes from my learning journey.</p>
@@ -424,7 +537,7 @@ function Footer() {
 function ProjectsPage() {
   return (
     <div className="projects-page">
-      <a className="back-link" href="/"><Icon name="back" size={17} /> Back to home</a>
+      <a className="back-link" href="/"><LuArrowLeft aria-hidden="true" size={17} /> Back to home</a>
       <p className="eyebrow">A closer look at my work</p>
       <h2 className="page-title">All projects<span className="accent-text">.</span></h2>
       <p className="page-intro">
@@ -490,6 +603,8 @@ function CursorSpotlight() {
 function App({ pathname = typeof window === 'undefined' ? '/' : window.location.pathname }) {
   const isProjectsPage = pathname.replace(/\/+$/, '') === '/projects'
   const [activeSection, setActiveSection] = useState('about')
+  const [isGameOpen, setIsGameOpen] = useState(false)
+  const [lastGameWord, setLastGameWord] = useState(null)
 
   useEffect(() => {
     const pageUrl = `https://francinejane-jet.vercel.app${isProjectsPage ? '/projects' : '/'}`
@@ -559,7 +674,11 @@ function App({ pathname = typeof window === 'undefined' ? '/' : window.location.
   return (
     <div className="app-frame">
       <CursorSpotlight />
-      <Sidebar activeSection={activeSection} isProjectsPage={isProjectsPage} />
+      <Sidebar
+        activeSection={activeSection}
+        isProjectsPage={isProjectsPage}
+        onGameClick={() => setIsGameOpen(true)}
+      />
       <nav className="mobile-nav" aria-label="Section navigation">
         {navigation.map((item) => (
           <a
@@ -586,6 +705,13 @@ function App({ pathname = typeof window === 'undefined' ? '/' : window.location.
           </div>
         )}
       </main>
+      {isGameOpen && (
+        <HangmanGame
+          onClose={() => setIsGameOpen(false)}
+          previousWord={lastGameWord}
+          onWordChange={setLastGameWord}
+        />
+      )}
     </div>
   )
 }
