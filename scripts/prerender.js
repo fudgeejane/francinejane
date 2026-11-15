@@ -32,6 +32,9 @@ function updateTag(html, tagName, selectorName, selectorValue, attribute, value)
 }
 
 const template = await readFile(path.join(outputDirectory, 'index.html'), 'utf8')
+const assetManifest = JSON.parse(
+  await readFile(path.join(outputDirectory, '.vite', 'manifest.json'), 'utf8'),
+)
 const server = await createServer({
   configFile: path.join(projectRoot, 'vite.config.js'),
   server: { middlewareMode: true },
@@ -53,7 +56,17 @@ try {
       throw new Error('Could not find the empty #root element in the built HTML template')
     }
 
-    let html = template.replace(rootPattern, `<div id="root">${markup}</div>`)
+    const markupWithBuiltAssets = markup.replace(
+      /src="\/src\/assets\/([^"]+)"/g,
+      (match, filename) => {
+        const asset = assetManifest[`src/assets/${filename}`]
+        if (!asset) {
+          throw new Error(`Could not find built asset for src/assets/${filename}`)
+        }
+        return `src="/${asset.file}"`
+      },
+    )
+    let html = template.replace(rootPattern, `<div id="root">${markupWithBuiltAssets}</div>`)
 
     if (route.path === '/projects') {
       html = html.replace(/<title>.*?<\/title>/, `<title>${projectTitle}</title>`)
